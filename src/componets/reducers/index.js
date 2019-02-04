@@ -1,71 +1,46 @@
 import * as types from '../actions/ActionTypes';
+import { Map, List } from 'immutable';
 
 //초기 상태를 정의
-const inititalState = {
-    counters: [
-        {
+const inititalState = Map({
+    counters: List([
+        Map({
             color: 'black',
-            index: 0
-        }
-    ]
-}
+            number: 0,
+        })
+    ])
+})
 
 //Reducer 함수 구현
-function Counter(state = inititalState, action) {
-    const { counters } = state;
-
+function counter(state = inititalState, action) {
+    const counters = state.get('counters');
+  
     switch(action.type) {
-        case types.CREATE:
-            return {
-                counters: [
-                    ...counters,
-                    {
-                        color: action.color,
-                        number: 0
-                    }
-                ]
-            };
-        case types.REMOVE:
-            return {
-                counters: counters.slice(0, counters.length - 1)
-            };
-            case types.INCREMENT:
-            return {
-                counters: [
-                    ...counters.slice(0, action.index),
-                    {
-                        ...counters[action.index],
-                        number: counters[action.index].number + 1
-                    },
-                    ...counters.slice(action.index + 1, counters.length)
-                ]
-            };
-        // action.index 번째 카운터의 number 에 1 을 뺍니다
-        case types.DECREMENT:
-            return {
-                counters: [
-                    ...counters.slice(0, action.index),
-                    {
-                        ...counters[action.index],
-                        number: counters[action.index].number - 1
-                    },
-                    ...counters.slice(action.index + 1, counters.length)
-                ]
-            };
-        case types.SET_COLOR:
-            return {
-                counters: [
-                    ...counters.slice(0, action.index),
-                    {
-                        ...counters[action.index],
-                        color: action.color,
-                    },
-                    ...counters.slice(action.index + 1, counters.length)
-                ]
-            }
-        default: 
-            return state;
+      case types.CREATE:
+        return state.set('counters', counters.push(Map({
+          color: action.color,
+          number: 0
+        })))
+      case types.REMOVE:
+        return state.set('counters', counters.pop());
+      case types.INCREMENT:
+        return state.set('counters', counters.update(
+          action.index,
+          counter => counter.set('number', counter.get('number') + 1))
+        );
+      case types.DECREMENT:
+        return state.set('counters', counters.update(
+          action.index,
+          counter => counter.set('number', counter.get('number') -1 ))
+        )
+      case types.SET_COLOR:
+          return state.set('counters', counters.update(
+            action.index,
+            counter => counter.set('color', action.color))
+          )
+      default:
+       return state;
     }
-}
+  }
 
-export default Counter;
+export default counter;
