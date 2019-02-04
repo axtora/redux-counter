@@ -29,7 +29,7 @@ function Counter(state = inititalState, action) {
             return {
                 counters: counters.slice(0, counters.length - 1)
             };
-        case types.INCREMENT:
+            case types.INCREMENT:
             return {
                 counters: [
                     ...counters.slice(0, action.index),
@@ -40,9 +40,10 @@ function Counter(state = inititalState, action) {
                     ...counters.slice(action.index + 1, counters.length)
                 ]
             };
-        case type.DECRMENT:
+        // action.index 번째 카운터의 number 에 1 을 뺍니다
+        case types.DECREMENT:
             return {
-                counetrs: [
+                counters: [
                     ...counters.slice(0, action.index),
                     {
                         ...counters[action.index],
@@ -50,8 +51,8 @@ function Counter(state = inititalState, action) {
                     },
                     ...counters.slice(action.index + 1, counters.length)
                 ]
-            }
-        case type.SET_COLOR:
+            };
+        case types.SET_COLOR:
             return {
                 counters: [
                     ...counters.slice(0, action.index),
